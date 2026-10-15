@@ -1,0 +1,12 @@
+# 公開するのはmod本体とドキュメントだけ（仕様書・作業メモ・画像生成の下書きは含めない）
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/koi-chan/
+
+# Claude Codeが読み込み時に用意する型定義
+/koi-chan/.claude-plugin/types/
+
+.DS_Store
+*.out

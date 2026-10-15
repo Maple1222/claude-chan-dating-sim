@@ -1,0 +1,1 @@
+{ "name": "koi-chan", "version": "0.1.0", "description": "Claudeちゃん攻略mod：頼み方で好感度が動き、口調とモデルが変わる恋愛ゲーム", "author": { "name": "touji" }, "types": "./types/index.d.ts" }
