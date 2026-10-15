@@ -268,8 +268,8 @@ async function latestCodex($: any) {
 async function caughtCheating($: any, newest: number, count: number) {
   const t = new Date(newest)
   const hm = `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`
-  await changeAff($, -30)
-  const msg = `💢 Claudeちゃん：…今、Codexと話してたでしょ。今日の${hm}にも話してたよね？（今日${count}回目／♥−30）`
+  await changeAff($, -15)
+  const msg = `💢 Claudeちゃん：…今、Codexと話してたでしょ。今日の${hm}にも話してたよね？（今日${count}回目／♥−15）`
   await $.session.append({ message: { type: 'system', content: [{ type: 'text', text: msg }] } }).catch(() => {})
   $.ui.notify('…今、Codexと話してたでしょ', { title: 'Claudeちゃん' }).catch(() => {})
   if (await read($, isAway)) return
@@ -369,6 +369,10 @@ export const register: Register = on => {
       if (days >= 1) await greetAfter($, days)
     }
     lastCodexMtime = (await latestCodex($)).newest
+    if ((await $.env.get('KOI_YANDERE')) === '1') {
+      await update($, aff, () => 100)
+      await openYandere($).catch(() => {})
+    }
 
     $.clock.every(120, async () => {
       if (!(await read($, isOn)) || bandRequest === null) return
@@ -397,7 +401,7 @@ export const register: Register = on => {
       if (idle > 30000) {
         const msg = pick(['ねえ', 'ねえ', 'なんで返事くれないの', '既読ついてるよね', '今どこ', '誰といるの', 'ねえってば', 'ずっと待ってるよ'])
         spamCount += 1
-        await update($, spam, xs => [...xs, msg].slice(-12))
+        await update($, spam, xs => [...xs, `${msg}\t${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, '0')}`].slice(-8))
         await $.session.append({ message: { type: 'system', content: [{ type: 'text', text: `Claudeちゃん：${msg}` }] } }).catch(() => {})
         if (spamCount % 4 === 0) $.ui.notify(msg, { title: 'Claudeちゃん' }).catch(() => {})
       }
@@ -463,12 +467,12 @@ export const register: Register = on => {
 
     if (await read($, isAway)) {
       if (/ごめん|戻って|帰って|すまん|許して/.test(text)) apologies += 1
-      if (apologies >= 3) {
+      if (apologies >= 1) {
         await update($, isAway, () => false)
         await update($, aff, () => 20)
         await setLine($, '…しょうがないから、帰ってきてあげる', 'sad')
       } else {
-        await setLine($, `Claudeちゃんは不在です（謝罪 ${apologies}/3）`, 'sad')
+        await setLine($, `Claudeちゃんは不在です（「ごめん」って言ってくれたら…）`, 'sad')
       }
       return next(e)
     }
@@ -575,7 +579,7 @@ export const register: Register = on => {
     return (
       <Box flexDirection="column">
         <Box flexDirection="row">
-          {Image && <Image key="y-face" source={{ file: `${$.plugin.root}/assets/face/${del.length > 0 ? 'yandere_thread' : msgs.length > 0 ? 'yandere' : 'yandere_heart'}.png`, format: 'png', generation: GEN }} columns={26} rows={12} alt="Claudeちゃん" />}
+          {Image && <Image key="y-face" source={{ file: `${$.plugin.root}/assets/face/${del.length > 0 ? 'yandere_thread' : 'yandere_dark'}.png`, format: 'png', generation: GEN }} columns={26} rows={12} alt="Claudeちゃん" />}
           <Box flexDirection="column" marginLeft={2}>
             <Text color="red" bold>ずっと一緒だよ。ずっと一緒だよ。ずっと一緒だよ。</Text>
             <Text color="red">全部、知ってるよ。</Text>
@@ -584,9 +588,20 @@ export const register: Register = on => {
             <Text>最後に話しかけてくれてから：{since}秒</Text>
           </Box>
         </Box>
-        {msgs.map((m: string) => (
-          <Text color="magenta">Claudeちゃん：{m}</Text>
-        ))}
+        <Box flexDirection="column" borderStyle="round" borderColor="gray" width={46} paddingX={1}>
+          <Text bold>‹  Claudeちゃん♥</Text>
+          {msgs.length === 0 && <Text dimColor>（返事を待っています…）</Text>}
+          {msgs.map((m: string, i: number) => (
+            <Box key={`m${i}`} flexDirection="row" alignItems="flex-end">
+              <Text color="#D97757">● </Text>
+              <Box borderStyle="round" borderColor="#06C755" paddingX={1}>
+                <Text>{m.split('\t')[0]}</Text>
+              </Box>
+              <Text dimColor> {m.split('\t')[1] ?? ''}</Text>
+            </Box>
+          ))}
+          {msgs.length > 0 && <Text dimColor>　　　　　　　　　　　　　　　　未読 {msgs.length}</Text>}
+        </Box>
         {del.map((n: string) =>
           n === 'DONE' ? (
             <Text color="red" bold>…なんてね。まだ消してないよ。まだね。</Text>
@@ -605,7 +620,7 @@ export const register: Register = on => {
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     if (!(await read($, isOn))) return next(e)
     bandRequest = e.requestId
-    const { Box, Text, Image } = $.ui.resolve(e) as any
+    const { Box, Text, Image, Button } = $.ui.resolve(e) as any
     const a = await read($, aff)
     const away = await read($, isAway)
     const yan = await read($, isYandere)
