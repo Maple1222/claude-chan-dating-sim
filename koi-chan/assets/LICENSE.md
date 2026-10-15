@@ -4,4 +4,4 @@
 
 コード（`hooks/`、`types/` など）はMIT Licenseです（リポジトリ直下の `LICENSE`）。
 
-The images in this folder are licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Credit: Maple1222 / https://github.com/Maple1222/koi-chan
+The images in this folder are licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Credit: Maple1222 / https://github.com/Maple1222/claude-chan-dating-sim

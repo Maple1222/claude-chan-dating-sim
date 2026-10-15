@@ -18,8 +18,8 @@ Claude Build Night Tokyo（2026-10-15、テーマ：Claude Code Mods）のハッ
 Claude Codeのmods（プラグインのフック）に対応した版が必要です。立ち絵を表示するには、画像表示に対応したターミナル（Ghostty、kitty）が必要です。
 
 ```bash
-git clone https://github.com/Maple1222/koi-chan.git
-claude --plugin-dir ./koi-chan/koi-chan
+git clone https://github.com/Maple1222/claude-chan-dating-sim.git
+claude --plugin-dir ./claude-chan-dating-sim/koi-chan
 ```
 
 起動すると入力欄の上にClaudeちゃんの立ち絵と♥メーターが出ます。`/love` でオンとオフを切り替えられ、オフの間は通常のClaude Codeと同じように動きます。
@@ -131,7 +131,7 @@ koi-chan/
 **Claude-chan Dating Sim mod** turns Claude inside Claude Code into a dating-sim heroine. How politely you ask changes her affection (♥), which switches her tone of voice and the model / reasoning effort she runs on (Haiku at low affection up to Fable at max effort at 100). Talking to other AIs such as Codex makes a rival appear, and too much love opens a yandere screen. Built in 90 minutes at Claude Build Night Tokyo (2026-10-15).
 
 ```bash
-claude --plugin-dir ./koi-chan/koi-chan
+claude --plugin-dir ./claude-chan-dating-sim/koi-chan
 ```
 
 Commands: `/love` (toggle), `/love-set <0-100>`, `/yandere`, `/uwaki`, `/time-skip <days>`, `/ask-me`.
